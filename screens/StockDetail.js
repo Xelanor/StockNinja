@@ -17,6 +17,7 @@ import RsiGraph from '../components/Graphs/RsiGraph';
 import ClosesGraph from '../components/Graphs/ClosesGraph';
 import EnvGraph from '../components/Graphs/EnvGraph';
 import NinjaGraph from '../components/Graphs/NinjaGraph';
+import TripleGraph from '../components/Graphs/TripleGraph';
 import Colors from '../constants/colors';
 
 rateCalculator = (price, prevClose) => {
@@ -264,6 +265,13 @@ class StockDetail extends Component {
             </View>
             <NinjaGraph
               data={this.state.data.ninja_index_s}
+              duration={this.state.duration}
+            />
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>Triple Index</Text>
+            </View>
+            <TripleGraph
+              data={this.state.data.triple_index}
               duration={this.state.duration}
             />
           </View>
