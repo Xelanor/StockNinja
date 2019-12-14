@@ -42,7 +42,7 @@ class RsiGraph extends React.PureComponent {
           contentInset={contentInset}
           yMax={100}
           yMin={0}>
-          <Grid />
+          <Grid svg={{strokeWidth: 1, stroke: 'rgba(194, 79, 61, 0.70)'}} />
         </LineChart>
       </View>
     );

@@ -5,8 +5,14 @@ import {Circle} from 'react-native-svg';
 
 class RsiGraph extends React.PureComponent {
   render() {
-    const data1 = this.props.data.slice(-1 * this.props.duration);
-    const data2 = Array(this.props.duration).fill(0);
+    let data1, data2;
+    if (this.props.data.length > 200) {
+      data1 = this.props.data;
+      data2 = Array(data1.length).fill(0);
+    } else {
+      data1 = this.props.data.slice(-1 * this.props.duration);
+      data2 = Array(this.props.duration).fill(0);
+    }
 
     const contentInset = {top: 20, bottom: 20};
 
@@ -51,7 +57,7 @@ class RsiGraph extends React.PureComponent {
           data={data}
           svg={{strokeWidth: 2, stroke: 'rgb(134, 65, 244)'}}
           contentInset={contentInset}>
-          <Grid />
+          <Grid svg={{strokeWidth: 1, stroke: 'rgba(194, 79, 61, 0.70)'}} />
           <Decorator />
         </LineChart>
       </View>

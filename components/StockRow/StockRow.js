@@ -45,7 +45,10 @@ const StockRow = props => {
         <TouchableWithoutFeedback
           onPress={() => {
             if (!props.list) {
-              props.navigation.push('StockDetail', {name: props.stockName});
+              props.navigation.push('StockDetail', {
+                name: props.stockName,
+                state: rate < 0 ? 'decreasing' : 'increasing',
+              });
             }
           }}>
           <View>

@@ -8,8 +8,10 @@ import {
   TouchableWithoutFeedback,
   Platform,
 } from 'react-native';
-import {createAppContainer} from 'react-navigation';
+import {createAppContainer, createSwitchNavigator} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
+import {createBottomTabNavigator} from 'react-navigation-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import Header from './components/Layout/Header';
 import Homepage from './screens/Homepage';
@@ -17,58 +19,9 @@ import StocksList from './screens/StocksList';
 import StockDetail from './screens/StockDetail';
 import Colors from './constants/colors';
 
-class HomeScreen extends Component {
-  static navigationOptions = {
-    headerTitle: () => <Header />,
-    headerBackTitle: null,
-  };
-  state = {
-    screen: 'stocks',
-  };
-  render() {
-    return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}>
-        <View style={styles.screen}>
-          {this.state.screen === 'stocks' ? (
-            <Homepage navigation={this.props.navigation} />
-          ) : (
-            <StocksList />
-          )}
-          <View
-            style={{
-              position: 'absolute',
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 50,
-              backgroundColor: Colors.secondary,
-            }}>
-            <View style={styles.bottomNavigator}>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  this.setState({screen: 'stocks'});
-                }}>
-                <Text style={styles.navigationTitle}>Hisse Senetlerim</Text>
-              </TouchableWithoutFeedback>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  this.setState({screen: 'allStocks'});
-                }}>
-                <Text style={styles.navigationTitle}>Bütün Hisseler</Text>
-              </TouchableWithoutFeedback>
-            </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-}
-
 class StockDetailsScreen extends React.Component {
   static navigationOptions = ({navigation}) => {
+    const state = navigation.getParam('state');
     return {
       headerTitle: () => (
         <Text style={{color: 'white', fontSize: 18}}>
@@ -77,7 +30,7 @@ class StockDetailsScreen extends React.Component {
       ),
       headerBackTitle: null,
       headerStyle: {
-        backgroundColor: '#03AC83',
+        backgroundColor: state === 'increasing' ? '#03AC83' : '#F45959',
         elevation: 0,
         height: 60,
         color: 'white',
@@ -116,21 +69,64 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppNavigator = createStackNavigator(
+const getTabBarIcon = (navigation, focused, tintColor) => {
+  const {routeName} = navigation.state;
+  let IconComponent = Ionicons;
+  let iconName;
+  if (routeName === 'Home') {
+    iconName = `ios-cash`;
+  } else if (routeName === 'StocksList') {
+    iconName = `ios-wallet`;
+  }
+  return <IconComponent name={iconName} size={25} color={tintColor} />;
+};
+
+const MaterialBottomTabNavigator = createBottomTabNavigator(
   {
-    Home: HomeScreen,
-    StockDetail: StockDetailsScreen,
+    Home: {
+      screen: Homepage,
+    },
+    StocksList: {
+      screen: StocksList,
+    },
   },
   {
     initialRouteName: 'Home',
-    defaultNavigationOptions: {
-      headerStyle: {
+    defaultNavigationOptions: ({navigation}) => ({
+      tabBarIcon: ({focused, tintColor}) =>
+        getTabBarIcon(navigation, focused, tintColor),
+    }),
+    navigationOptions: {
+      header: <Header />,
+      headerBackTitle: null,
+    },
+    tabBarOptions: {
+      showLabel: false,
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+      tabStyle: {
         backgroundColor: Colors.dark,
-        elevation: 0,
-        height: 60,
       },
     },
   },
 );
 
-export default createAppContainer(AppNavigator);
+const AppStack = createStackNavigator({
+  Home: {screen: MaterialBottomTabNavigator},
+  StockDetail: {
+    screen: StockDetailsScreen,
+  },
+});
+
+const switchNavigator = createSwitchNavigator(
+  {
+    App: AppStack,
+  },
+  {
+    initialRouteName: 'App',
+  },
+);
+
+const AppContainer = createAppContainer(switchNavigator);
+
+export default AppContainer;

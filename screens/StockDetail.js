@@ -122,11 +122,19 @@ class StockDetail extends Component {
       parseFloat(data.price),
       parseFloat(data.prevClose),
     );
+    const state = this.props.navigation.getParam('state');
     return (
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <View style={styles.screen}>
-            <View style={styles.summary}>
+            <View
+              style={[
+                styles.summary,
+                {
+                  backgroundColor:
+                    state === 'increasing' ? '#03AC83' : '#F45959',
+                },
+              ]}>
               <View style={styles.summaryRow}>
                 <TinyInfoBox title="Fiyat" value={data.price} />
                 <TinyInfoBox title="Düşük-Yüksek" value={data.dayRange} />
@@ -214,13 +222,19 @@ class StockDetail extends Component {
                 color={'red'}
               />
             </View>
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>RSI Index</Text>
-            </View>
-            <RsiGraph
-              data={this.state.data.rsi}
-              duration={this.state.duration}
-            />
+            {this.state.data.rsi.length > 0 ? (
+              <>
+                <View style={styles.headerContainer}>
+                  <Text style={styles.headerText}>RSI Index</Text>
+                </View>
+                <RsiGraph
+                  data={this.state.data.rsi}
+                  duration={this.state.duration}
+                />
+              </>
+            ) : (
+              <View />
+            )}
             <View style={styles.headerContainer}>
               <Text style={styles.headerText}>
                 Son {this.state.duration} günün kapanışları
@@ -245,6 +259,13 @@ class StockDetail extends Component {
               data={this.state.data.ninja_index}
               duration={this.state.duration}
             />
+            <View style={styles.headerContainer}>
+              <Text style={styles.headerText}>Ninja Index 2</Text>
+            </View>
+            <NinjaGraph
+              data={this.state.data.ninja_index_s}
+              duration={this.state.duration}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -263,7 +284,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     flexDirection: 'row',
     height: 65,
-    backgroundColor: '#03AC83',
   },
   summaryRow: {
     flex: 1,
