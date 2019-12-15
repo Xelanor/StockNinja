@@ -237,12 +237,11 @@ class StockDetail extends Component {
               <View />
             )}
             <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>
-                Son {this.state.duration} günün kapanışları
-              </Text>
+              <Text style={styles.headerText}>Triple Index</Text>
             </View>
-            <ClosesGraph
-              data={this.state.data.closes}
+            <TripleGraph
+              data={this.state.data.triple_index}
+              closes={this.state.data.closes}
               duration={this.state.duration}
             />
             <View style={styles.headerContainer}>
@@ -265,13 +264,6 @@ class StockDetail extends Component {
             </View>
             <NinjaGraph
               data={this.state.data.ninja_index_s}
-              duration={this.state.duration}
-            />
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Triple Index</Text>
-            </View>
-            <TripleGraph
-              data={this.state.data.triple_index}
               duration={this.state.duration}
             />
           </View>

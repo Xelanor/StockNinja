@@ -7,6 +7,7 @@ class RsiGraph extends React.PureComponent {
     const data1 = this.props.data.first_list.slice(-1 * this.props.duration);
     const data2 = this.props.data.second_list.slice(-1 * this.props.duration);
     const data3 = this.props.data.third_list.slice(-1 * this.props.duration);
+    const closes = this.props.closes.slice(-1 * this.props.duration);
     const contentInset = {top: 20, bottom: 20};
 
     const data = [
@@ -21,6 +22,10 @@ class RsiGraph extends React.PureComponent {
       {
         data: data3,
         svg: {stroke: 'green'},
+      },
+      {
+        data: closes,
+        svg: {stroke: 'rgb(134, 65, 244)'},
       },
     ];
 
@@ -40,7 +45,7 @@ class RsiGraph extends React.PureComponent {
           data={data}
           svg={{strokeWidth: 2, stroke: 'rgb(134, 65, 244)'}}
           contentInset={contentInset}>
-          <Grid />
+          <Grid svg={{strokeWidth: 1, stroke: 'rgba(194, 79, 61, 0.40)'}} />
         </LineChart>
       </View>
     );
