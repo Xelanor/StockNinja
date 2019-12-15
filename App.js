@@ -17,6 +17,7 @@ import Header from './components/Layout/Header';
 import Homepage from './screens/Homepage';
 import StocksList from './screens/StocksList';
 import StockDetail from './screens/StockDetail';
+import GlobalAnalysis from './screens/GlobalAnalysis';
 import Colors from './constants/colors';
 
 class StockDetailsScreen extends React.Component {
@@ -77,6 +78,8 @@ const getTabBarIcon = (navigation, focused, tintColor) => {
     iconName = `ios-cash`;
   } else if (routeName === 'StocksList') {
     iconName = `ios-wallet`;
+  } else if (routeName === 'GlobalAnalysis') {
+    iconName = `ios-globe`;
   }
   return <IconComponent name={iconName} size={25} color={tintColor} />;
 };
@@ -85,6 +88,9 @@ const MaterialBottomTabNavigator = createBottomTabNavigator(
   {
     Home: {
       screen: Homepage,
+    },
+    GlobalAnalysis: {
+      screen: GlobalAnalysis,
     },
     StocksList: {
       screen: StocksList,
