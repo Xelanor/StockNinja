@@ -5,16 +5,7 @@ import Swipeout from 'react-native-swipeout';
 
 import Colors from '../../constants/colors';
 
-rateCalculator = (price, prevClose) => {
-  const rate = (((price - prevClose) / prevClose) * 100).toFixed(2);
-  return rate;
-};
-
 const StockRow = props => {
-  const rate = rateCalculator(
-    parseFloat(props.stock.price),
-    parseFloat(props.stock.prevClose),
-  );
   if (props.list) {
     var swipeoutBtns = [
       {
@@ -47,7 +38,7 @@ const StockRow = props => {
             if (!props.list) {
               props.navigation.push('StockDetail', {
                 name: props.stockName,
-                state: rate < 0 ? 'decreasing' : 'increasing',
+                state: props.stock.rate < 0 ? 'decreasing' : 'increasing',
               });
             }
           }}>
@@ -62,7 +53,9 @@ const StockRow = props => {
                 key={props.stock.price}
                 data={props.stock.price}
                 textStyle={
-                  rate < 0 ? styles.decreasingText : styles.increasingText
+                  props.stock.rate < 0
+                    ? styles.decreasingText
+                    : styles.increasingText
                 }
               />
               <Cell
@@ -71,10 +64,12 @@ const StockRow = props => {
                 textStyle={styles.defaultText}
               />
               <Cell
-                key={rate}
-                data={['%', rate]}
+                key={props.stock.rate}
+                data={['%', props.stock.rate]}
                 textStyle={
-                  rate < 0 ? styles.decreasingText : styles.increasingText
+                  props.stock.rate < 0
+                    ? styles.decreasingText
+                    : styles.increasingText
                 }
               />
             </TableWrapper>

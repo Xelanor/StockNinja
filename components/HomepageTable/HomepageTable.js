@@ -38,21 +38,19 @@ const HomepageTable = props => {
               onRefresh={onRefresh}
             />
           }>
-          {Object.keys(props.stocks)
-            .sort()
-            .map((stockName, index) => {
-              return (
-                <StockRow
-                  key={index}
-                  index={index}
-                  stockName={stockName}
-                  stock={props.stocks[stockName]}
-                  homepage={true}
-                  delete={props.delete}
-                  navigation={props.navigation}
-                />
-              );
-            })}
+          {props.stocks.map((stock, index) => {
+            return (
+              <StockRow
+                key={index}
+                index={index}
+                stockName={stock.stockName}
+                stock={stock}
+                homepage={true}
+                delete={props.delete}
+                navigation={props.navigation}
+              />
+            );
+          })}
         </ScrollView>
       </SafeAreaView>
     </View>
