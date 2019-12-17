@@ -20,21 +20,24 @@ class StocksList extends Component {
   state = {
     rsi: 0,
     ninja: 0,
+    pd_dd: 0,
     stocks: null,
-    tableHead: ['', 'Fiyat', 'Düşük-Yüksek', 'Fark'],
+    loading: false,
   };
 
-  fetchGlobalAnalysis = () => {
-    axios
+  fetchGlobalAnalysis = async () => {
+    await this.setState({loading: true});
+    await axios
       .post('http://34.67.211.44/api/ticker/global', {
         rsi: this.state.rsi,
         ninja: this.state.ninja,
+        pd_dd: this.state.pd_dd,
       })
       .then(res => {
         this.setState({stocks: res.data});
-        console.log(res.data);
       })
       .catch(err => console.error(err));
+    this.setState({loading: false});
   };
 
   render() {
@@ -53,7 +56,7 @@ class StocksList extends Component {
                 onChangeText={e => this.setState({rsi: e})}
                 maxLength={8}></TextInput>
             </View>
-            <Ionicons name={'ios-add'} size={50} color={'tomato'} />
+            <Ionicons name={'ios-add'} size={35} color={'tomato'} />
             <View style={styles.col}>
               <Text style={styles.headerText}>NINJA Max</Text>
               <TextInput
@@ -63,7 +66,24 @@ class StocksList extends Component {
                 onChangeText={e => this.setState({ninja: e})}
                 maxLength={8}></TextInput>
             </View>
+            <Ionicons name={'ios-add'} size={35} color={'tomato'} />
+            <View style={styles.col}>
+              <Text style={styles.headerText}>PD/DD Max</Text>
+              <TextInput
+                style={styles.input}
+                value={this.state.pd_dd}
+                keyboardType="decimal-pad"
+                onChangeText={e => this.setState({pd_dd: e})}
+                maxLength={8}></TextInput>
+            </View>
           </View>
+          {this.state.loading ? (
+            <View style={[styles.loadingContainer, styles.loadingHorizontal]}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : (
+            <View />
+          )}
           <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <View style={styles.buttonContainer}>
               <Button
@@ -77,7 +97,7 @@ class StocksList extends Component {
             <View style={{paddingTop: 20}}>
               <Table borderStyle={{borderColor: 'transparent'}}>
                 <Row
-                  data={['', 'RSI', 'NINJA', 'F/K']}
+                  data={['', 'RSI', 'NINJA', 'F/K', 'PD/DD', 'ÖZ.V.KR']}
                   style={styles.head}
                   textStyle={styles.tableHeaderText}
                 />
@@ -103,6 +123,14 @@ class StocksList extends Component {
                         />
                         <Cell
                           data={stock.fk.toFixed(2)}
+                          textStyle={styles.defaultText}
+                        />
+                        <Cell
+                          data={stock.pd_dd.toFixed(2)}
+                          textStyle={styles.defaultText}
+                        />
+                        <Cell
+                          data={(stock.fk / stock.pd_dd).toFixed(2)}
                           textStyle={styles.defaultText}
                         />
                       </TableWrapper>
@@ -133,7 +161,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     justifyContent: 'center',
-    width: '75%',
+    width: '90%',
     paddingTop: 15,
   },
   col: {
@@ -177,8 +205,19 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderBottomWidth: 0.5,
   },
-  titleText: {margin: 6, color: 'white', fontWeight: 'bold'},
-  defaultText: {margin: 6, color: 'white', textAlign: 'center'},
+  titleText: {margin: 6, color: 'white', fontWeight: 'bold', fontSize: 13},
+  defaultText: {margin: 6, color: 'white', textAlign: 'center', fontSize: 12},
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingHorizontal: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
 });
 
 export default StocksList;

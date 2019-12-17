@@ -48,6 +48,7 @@ const StocksListTable = props => {
                 stock={stock}
                 list={props.list}
                 addNewStock={props.addNewStock}
+                navigation={props.navigation}
               />
             );
           })}

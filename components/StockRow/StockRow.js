@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import {View, StyleSheet, Text, TouchableNativeFeedback} from 'react-native';
 import {TableWrapper, Cell} from 'react-native-table-component';
 import Swipeout from 'react-native-swipeout';
 
@@ -33,14 +33,12 @@ const StockRow = props => {
         right={swipeoutBtns}
         backgroundColor={Colors.primary}
         autoClose={true}>
-        <TouchableWithoutFeedback
+        <TouchableNativeFeedback
           onPress={() => {
-            if (!props.list) {
-              props.navigation.push('StockDetail', {
-                name: props.stockName,
-                state: props.stock.rate < 0 ? 'decreasing' : 'increasing',
-              });
-            }
+            props.navigation.push('StockDetail', {
+              name: props.stockName,
+              state: props.stock.rate < 0 ? 'decreasing' : 'increasing',
+            });
           }}>
           <View>
             <TableWrapper style={styles.row}>
@@ -74,7 +72,7 @@ const StockRow = props => {
               />
             </TableWrapper>
           </View>
-        </TouchableWithoutFeedback>
+        </TouchableNativeFeedback>
       </Swipeout>
     </>
   );

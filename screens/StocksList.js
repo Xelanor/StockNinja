@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import axios from 'axios';
 
-import StocksListTable from '../components/StocksListTable/StocksListTable';
+import StocksListTable from '../components/StocksListTable/StocksListTable2';
 import Colors from '../constants/colors';
 
 class StocksList extends Component {
@@ -55,6 +55,7 @@ class StocksList extends Component {
               refresh={this.getData}
               list={true}
               addNewStock={this.addNewStock}
+              navigation={this.props.navigation}
             />
           ) : (
             <View style={[styles.container, styles.loading]}>
