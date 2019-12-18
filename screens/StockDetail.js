@@ -31,6 +31,8 @@ class StockDetail extends Component {
     loading: false,
     targets: {},
     duration: 30,
+    transactionPrice: 0,
+    transactionAmount: 0,
   };
 
   componentDidMount() {
@@ -56,7 +58,11 @@ class StockDetail extends Component {
           prevBuyTarget: data.prevBuyTarget.toString(),
           prevSellTarget: data.prevSellTarget.toString(),
         };
-        this.setState({data, targets});
+        this.setState({
+          data,
+          targets,
+          transactionPrice: res.data.price.toString(),
+        });
       })
       .catch(err => console.error(err));
     this.setState({loading: false});
@@ -110,6 +116,27 @@ class StockDetail extends Component {
     this.getData();
   };
 
+  submitTransaction = async (stockName, type) => {
+    this.setState({loading: true});
+    let transaction = {
+      name: stockName,
+      price: this.state.transactionPrice,
+      amount: this.state.transactionAmount,
+      type: type,
+    };
+    await axios
+      .post('http://34.67.211.44/api/transaction/add', transaction)
+      .then(res => console.log('success'))
+      .catch(err => {
+        console.log(err);
+      });
+    this.setState({
+      loading: false,
+      transactionAmount: 0,
+    });
+    this.getData();
+  };
+
   render() {
     if (!this.state.data || this.state.loading) {
       return (
@@ -118,7 +145,7 @@ class StockDetail extends Component {
         </View>
       );
     }
-    const {data, targets} = this.state;
+    const {data, targets, transactionPrice, transactionAmount} = this.state;
     const rate = rateCalculator(
       parseFloat(data.price),
       parseFloat(data.prevClose),
@@ -193,6 +220,43 @@ class StockDetail extends Component {
                       this.setSellTarget(data.name);
                     }}
                     color="green"></Button>
+                </View>
+              </View>
+              <View style={styles.col}>
+                <Text style={styles.titleText}></Text>
+                <Text style={styles.infoText}>Price</Text>
+                <TextInput
+                  style={styles.input}
+                  value={transactionPrice}
+                  keyboardType="decimal-pad"
+                  onChangeText={e => this.setState({transactionPrice: e})}
+                  maxLength={8}
+                />
+                <Text style={styles.infoText}>Amount</Text>
+                <TextInput
+                  style={styles.input}
+                  value={transactionAmount}
+                  keyboardType="decimal-pad"
+                  onChangeText={e => this.setState({transactionAmount: e})}
+                  maxLength={8}
+                />
+                <View style={styles.row}>
+                  <View style={styles.button}>
+                    <Button
+                      title="BUY"
+                      onPress={() => {
+                        this.submitTransaction(data.name, 'buy');
+                      }}
+                      color="green"></Button>
+                  </View>
+                  <View style={styles.button}>
+                    <Button
+                      title="SELL"
+                      onPress={() => {
+                        this.submitTransaction(data.name, 'sell');
+                      }}
+                      color="red"></Button>
+                  </View>
                 </View>
               </View>
             </View>

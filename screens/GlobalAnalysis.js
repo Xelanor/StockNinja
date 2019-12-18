@@ -29,14 +29,14 @@ class StocksList extends Component {
     await this.setState({loading: true});
     await axios
       .post('http://34.67.211.44/api/ticker/global', {
-        rsi: this.state.rsi,
-        ninja: this.state.ninja,
-        pd_dd: this.state.pd_dd,
+        rsi: this.state.rsi === 0 ? 1000 : this.state.rsi,
+        ninja: this.state.ninja === 0 ? 1000 : this.state.ninja,
+        pd_dd: this.state.pd_dd === 0 ? 1000 : this.state.pd_dd,
       })
       .then(res => {
         this.setState({stocks: res.data});
       })
-      .catch(err => console.error(err));
+      .catch(err => console.log(err));
     this.setState({loading: false});
   };
 
